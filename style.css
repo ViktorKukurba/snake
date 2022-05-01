@@ -1,0 +1,23 @@
+body {
+    max-width: 500px;
+    margin: 0 auto;
+    border: 1px solid green;
+}
+
+header {
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem;
+    align-items: center;
+}
+
+h2 {
+    color: green;
+    margin: 0;
+}
+
+#score {
+    color: green;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
