@@ -21,4 +21,17 @@ export class GameField {
 
         this.#snake.render();
     }
+
+    start() {
+        this.#gameLoop();
+    }
+
+    #gameLoop() {
+        this.#snake.move();
+        if (this.#snake.hasCollided()) {
+            return;
+        }
+        this.render();
+        setTimeout(() => this.#gameLoop(), 200);
+    }
 }
