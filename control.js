@@ -10,6 +10,11 @@ export class Control {
         return this.#dy;
     }
 
+    stop() {
+        this.#dx = 0;
+        this.#dy = 0;
+    }
+
     constructor() {
         document.addEventListener('keydown', evt => {
             switch(evt.code) {
