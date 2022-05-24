@@ -1,44 +1,17 @@
-export class Food {
-    #coordinates;
-    #context;
+import { GameElement } from "./game-element.js";
 
-    get coordinates() {
-        return this.#coordinates;
-    }
-
-    constructor(renderingContext) {
-        this.#context = renderingContext;
-    }
-
-    get exists() {
-        return !!this.#coordinates;
-    }
-
-    empty() {
-        this.#coordinates = null;
-    }
-
-    render() {
-        if (!this.exists) {
-            return;
-        }
-        this.#context.fillStyle = 'lightgeen';
-        this.#context.strokeStyle = 'darkgreen';
-        this.#context.fillRect(this.#coordinates.x, this.#coordinates.y, 20, 20);
-        this.#context.strokeRect(this.#coordinates.x, this.#coordinates.y, 20, 20);
-    }
+export class Food extends GameElement {
 
     create() {
-        this.#coordinates = {
-            x: this.#generateRandom(),
-            y: this.#generateRandom()
+        this.coordinates = {
+            x: this.#generateRandom(this.gameWidth),
+            y: this.#generateRandom(this.gameHeight)
         };
-        console.log('CREATE', this.coordinates);
     }
 
-    #generateRandom() {
-        const random = Math.random() * 380;
-        return Math.round(random/20) * 20;
+    #generateRandom(max) {
+        const random = Math.random() * (max - this.size);
+        return Math.round(random/this.size) * this.size;
     }
 
 }

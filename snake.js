@@ -1,47 +1,31 @@
 import { Control } from "./control.js";
+import { GameElement } from "./game-element.js";
 
-export class Snake {
-
-    #size = 20;
-    #context;
+export class Snake extends GameElement {
     #control;
-    #coordinates;
     #directionsCoordinates = {
-        ArrowLeft: { x: -this.#size, y: 0 },
-        ArrowRight: { x: this.#size, y: 0 },
-        ArrowUp: { x: 0, y: -this.#size },
-        ArrowDown: { x: 0, y: this.#size }
+        ArrowLeft: { x: -this.size, y: 0 },
+        ArrowRight: { x: this.size, y: 0 },
+        ArrowUp: { x: 0, y: -this.size },
+        ArrowDown: { x: 0, y: this.size }
     };
 
     constructor(renderingContext) {
-        this.#context = renderingContext;
+        super(renderingContext);
         this.#control = new Control();
-        this.init();
+        this.create();
     }
 
-    init() {
+    create() {
         this.#control.stop();
-        this.#coordinates = [{
-            x: 200,
-            y: 200
-        }, {
-            x: 180,
-            y: 200
-        }, {
-            x: 160,
-            y: 200
-        }, {
-            x: 140,
-            y: 200
-        }];
+        this.coordinates = [...new Array(4)].map((v, i) => ({
+            y: this.gameHeight / 2,
+            x: this.gameWidth / 2 - i * this.size
+        }));
     }
 
     get head() {
-        return this.#coordinates.at(0);
-    }
-
-    render() {
-        this.#coordinates.forEach(c => this.#renderSection(c));
+        return this.coordinates.at(0);
     }
 
     move(increase) {
@@ -54,9 +38,9 @@ export class Snake {
 
         const newHeadPosition = { x: currentHeadPosition.x + diff.x, y: currentHeadPosition.y + diff.y };
 
-        this.#coordinates.unshift(newHeadPosition);
+        this.coordinates.unshift(newHeadPosition);
         if (!increase) {
-            this.#coordinates.pop();
+            this.coordinates.pop();
         }
     }
 
@@ -66,20 +50,12 @@ export class Snake {
             return true;
         }
 
-        if (x > 400 || y > 400) {
+        if (x > this.gameWidth || y > this.gameHeight) {
             return true;
         }
 
-        const body = this.#coordinates.slice(1);
+        const body = this.coordinates.slice(1);
 
         return body.some(c => c.x === x && c.y === y);
-    }
-
-    #renderSection({ x, y }) {
-        this.#context.fillStyle = 'gray';
-        this.#context.fillRect(x, y, this.#size, this.#size);
-
-        this.#context.strokeStyle = 'black';
-        this.#context.strokeRect(x, y, this.#size, this.#size);
     }
 }
