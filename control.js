@@ -1,50 +1,39 @@
 export class Control {
-    #dx = 0;
-    #dy = 0;
+    #direction;
+    #latestDirectionClick;
 
-    get dx() {
-        return this.#dx;
-    }
-
-    get dy() {
-        return this.#dy;
-    }
-
-    stop() {
-        this.#dx = 0;
-        this.#dy = 0;
+    get direction() {
+        return this.#direction;
     }
 
     constructor() {
         document.addEventListener('keydown', evt => {
-            switch(evt.code) {
-                case 'ArrowUp': {
-                    this.#setDirection(0, -20);
-                    break;
-                }
-                case 'ArrowDown': {
-                    this.#setDirection(0, 20);
-                    break;
-                }
-                case 'ArrowLeft': {
-                    this.#setDirection(-20, 0);
-                    break
-                }
-                case 'ArrowRight': {
-                    this.#setDirection(20, 0);
-                }
+            const horizontalDirection = ['ArrowLeft', 'ArrowRight'];
+            const verticalDirection = ['ArrowUp', 'ArrowDown'];
+            const directions = [...horizontalDirection, ...verticalDirection];
+
+            if (!directions.includes(evt.code)) {
+                return;
             }
+
+            if (horizontalDirection.includes(evt.code) && horizontalDirection.includes(this.direction)) {
+                return;
+            }
+
+            if (verticalDirection.includes(evt.code) && verticalDirection.includes(this.direction)) {
+                return;
+            }
+
+            this.#latestDirectionClick = evt.code;
         });
     }
 
-    #setDirection(dx, dy) {
-        if (dx !== 0 && this.dx === -dx) {
-            return;
-        }
-        if (dy !==0 && this.dy === -dy) {
-            return;
-        }
-        this.#dx = dx;
-        this.#dy = dy;
+    update() {
+        this.#direction = this.#latestDirectionClick;
+    }
+
+    stop() {
+        this.#latestDirectionClick = null;
+        this.#direction = null;
     }
 }

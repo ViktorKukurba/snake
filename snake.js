@@ -6,6 +6,12 @@ export class Snake {
     #context;
     #control;
     #coordinates;
+    #directionsCoordinates = {
+        ArrowLeft: { x: -this.#size, y: 0 },
+        ArrowRight: { x: this.#size, y: 0 },
+        ArrowUp: { x: 0, y: -this.#size },
+        ArrowDown: { x: 0, y: this.#size }
+    };
 
     constructor(renderingContext) {
         this.#context = renderingContext;
@@ -39,11 +45,14 @@ export class Snake {
     }
 
     move(increase) {
-        if (this.#control.dx === 0 && this.#control.dy === 0) {
+        this.#control.update();
+        if (!this.#control.direction) {
             return;
         }
         const currentHeadPosition = this.head;
-        const newHeadPosition = { x: currentHeadPosition.x + this.#control.dx, y: currentHeadPosition.y + this.#control.dy };
+        const diff = this.#directionsCoordinates[this.#control.direction];
+
+        const newHeadPosition = { x: currentHeadPosition.x + diff.x, y: currentHeadPosition.y + diff.y };
 
         this.#coordinates.unshift(newHeadPosition);
         if (!increase) {
